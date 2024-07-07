@@ -5,6 +5,8 @@ import FoodItemCard from './FoodItemCard';
 
 const Menu = ({ addItem, updateItemCount }) => {
   const [sections, setSections] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCategoriesAndItems = async () => {
@@ -12,10 +14,12 @@ const Menu = ({ addItem, updateItemCount }) => {
       const restaurantId = localStorage.getItem('restaurantId');
       if (!token || !restaurantId) {
         console.error('Token or restaurant ID not found in localStorage');
+        setError('Authentication error. Please log in again.');
+        setLoading(false);
         return;
       }
       try {
-        const categoriesResponse = await axios.get(`http://localhost:3001/categories/${restaurantId}`, {
+        const categoriesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/categories/${restaurantId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -23,7 +27,7 @@ const Menu = ({ addItem, updateItemCount }) => {
         const categories = categoriesResponse.data;
         const sectionsWithItems = await Promise.all(
           categories.map(async (category) => {
-            const itemsResponse = await axios.get(`http://localhost:3001/items/${category._id}`, {
+            const itemsResponse = await axios.get(`${process.env.REACT_APP_API_URL}/items/${category._id}`, {
               headers: {
                 Authorization: `Bearer ${token}`
               }
@@ -32,19 +36,30 @@ const Menu = ({ addItem, updateItemCount }) => {
               title: category.name,
               items: itemsResponse.data.map(item => ({
                 ...item,
-                image: `http://localhost:3001/uploads/${item.image}`
+                image: `${process.env.REACT_APP_API_URL}/uploads/${item.image}`
               }))
             };
           })
         );
         setSections(sectionsWithItems);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching categories or items:', error);
+        setError('Error loading menu. Please try again later.');
+        setLoading(false);
       }
     };
 
     fetchCategoriesAndItems();
   }, []);
+
+  if (loading) {
+    return <div>Loading menu...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="menu">
