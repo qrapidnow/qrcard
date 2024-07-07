@@ -1,10 +1,21 @@
 {
   "version": 2,
-  "name": "qrapid-backend",
   "builds": [
-    { "src": "app.js", "use": "@vercel/node" }
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "/app.js" }
-  ]
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "REACT_APP_API_URL": "http://localhost:3001" // Update this to your backend's URL when deploying
+  }
 }
