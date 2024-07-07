@@ -19,24 +19,24 @@ const Menu = ({ addItem, updateItemCount }) => {
         return;
       }
       try {
-        const categoriesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/categories/${restaurantId}`, {
+        const categoriesResponse = await axios.get(${process.env.REACT_APP_API_URL}/categories/${restaurantId}, {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: Bearer ${token}
           }
         });
         const categories = categoriesResponse.data;
         const sectionsWithItems = await Promise.all(
           categories.map(async (category) => {
-            const itemsResponse = await axios.get(`${process.env.REACT_APP_API_URL}/items/${category._id}`, {
+            const itemsResponse = await axios.get(${process.env.REACT_APP_API_URL}/items/${category._id}, {
               headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: Bearer ${token}
               }
             });
             return {
               title: category.name,
               items: itemsResponse.data.map(item => ({
                 ...item,
-                image: `${process.env.REACT_APP_API_URL}/uploads/${item.image}`
+                image: ${process.env.REACT_APP_API_URL}/uploads/${item.image}
               }))
             };
           })
