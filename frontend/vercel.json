@@ -1,18 +1,10 @@
 {
   "version": 2,
+  "name": "qrapid-backend",
   "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
+    { "src": "app.js", "use": "@vercel/node" }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+    { "src": "/(.*)", "dest": "/app.js" }
   ]
 }
