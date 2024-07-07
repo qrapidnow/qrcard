@@ -1,13 +1,3 @@
-import React, { useEffect, useState } from 'react';
-import './App.css';
-import Header from './components/Header';
-import SearchBar from './components/SearchBar';
-import Navbar from './components/NavBar';
-import Menu from './components/Menu';
-import Cart from './components/Cart';
-import CartItem from './components/CartItem';
-import axios from 'axios';
-
 const App = () => {
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
@@ -19,11 +9,11 @@ const App = () => {
   useEffect(() => {
     const fetchUsersAndToken = async () => {
       try {
-        const usersResponse = await axios.get('http://localhost:3001/users');
+        const usersResponse = await axios.get(`${process.env.REACT_APP_API_URL}/users`);
         const users = usersResponse.data;
         if (users.length > 0) {
           const firstUserId = users[0]._id;
-          const tokenResponse = await axios.get(`http://localhost:3001/token/${firstUserId}`);
+          const tokenResponse = await axios.get(`${process.env.REACT_APP_API_URL}/token/${firstUserId}`);
           const token = tokenResponse.data.token;
           if (token) {
             localStorage.setItem('token', token);
@@ -41,7 +31,7 @@ const App = () => {
 
   const fetchRestaurant = async (token) => {
     try {
-      const response = await axios.get('http://localhost:3001/restaurants', {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/restaurants`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRestaurantName(response.data.name);
