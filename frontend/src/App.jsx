@@ -1,4 +1,3 @@
-[3:14 pm, 07/07/2024] Rajat K VJTI: const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const app = express();
